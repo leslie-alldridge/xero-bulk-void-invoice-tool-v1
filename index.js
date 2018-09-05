@@ -206,6 +206,20 @@ app.use('/createinvoice', async function(req, res) {
     }
 });
 
+app.post('/void', async function(req, res) {
+    console.log(req.body)
+    authorizedOperation(req, res, '/void', function(xeroClient) {
+        xeroClient.invoices.update(
+            {
+                "InvoiceNumber": "INV-123",
+                "Status": "VOIDED"
+            }
+        )
+
+
+})
+})
+
 app.use(function(req, res, next) {
     if (req.session)
         delete req.session.returnto;
