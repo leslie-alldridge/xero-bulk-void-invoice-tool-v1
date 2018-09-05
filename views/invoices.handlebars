@@ -1,4 +1,5 @@
-<h3>Invoices</h3>
+<h3>Approved Invoices</h3>
+<p><i><b>Note:</b> Only unpaid invoices will display below</i></p>
 <table class="table table-bordered table-collapsed table-hover">
     <thead>
         <tr>
@@ -7,7 +8,6 @@
             <th>Due Date</th>
             <th>Status</th>
             <th>Total</th>
-            <th>Attachments</th>
         </tr>
     </thead>
     <tbody>
@@ -32,15 +32,10 @@
             </a>
         </td>
         {{/ifCond}}
-        <td>{{ this.Date }}</td>
-        <td>{{ this.DueDate }}</td>
+        <td>{{ this.DateString }}</td>
+        <td>{{ this.DueDateString }}</td>
         <td>{{ this.Status}}</td>
         <td>{{ this.Total }}</td>
-        <td>
-            {{#if this.HasAttachments }}
-                <a href="/attachments?entityID={{ this.InvoiceID }}&entityType=INVOICE">View</a>
-            {{/if}}
-        </td>
     </tr>
     
     {{#ifCond this.Payments.length '>' 0}}
@@ -70,4 +65,8 @@
     {{/ifCond}}
     {{/each}}
     </tbody>
+    <form id="voidForm" action='/void' method="POST">
+  <input type="submit" name="VOID" value="VOID" />
+
+</form>
 </table>
