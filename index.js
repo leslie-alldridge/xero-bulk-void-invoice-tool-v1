@@ -150,18 +150,21 @@ app.get('/access', async function(req, res) {
 
 app.get('/invoices', async function(req, res) {
     authorizedOperation(req, res, '/invoices', function(xeroClient) {
-        xeroClient.invoices.get()
+        xeroClient.invoices.get(
+            { Statuses: 'AUTHORISED' }
+        )
             .then(function(result) {
-                func.removePayments(result.Invoices)
-                res.render('invoices', {
-                    invoices: result.Invoices,
-                    active: {
-                        invoices: true,
-                        nav: {
-                            accounting: true
+                const formattedData = func.removePayments(result.Invoices)
+                    res.render('invoices', {
+                        invoices: formattedData,
+                        active: {
+                            invoices: true,
+                            nav: {
+                                accounting: true
+                            }
                         }
-                    }
-                });
+                    });
+                
             })
             .catch(function(err) {
                 handleErr(err, req, res, 'invoices');
