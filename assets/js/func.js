@@ -24,6 +24,18 @@ function removePayments (apiInfo) {
   return result
 }
 
+function checkAll (bx) {
+    var cbs = document.getElementsByClassName('checkbox');
+  for(var i=0; i < cbs.length; i++) {
+    // if(cbs[i].type == 'checkbox') {
+      cbs[i].checked = bx.checked;
+    
+  }
+  console.log(cbs);
+  
+}
+
 module.exports = {
-    removePayments
+    removePayments,
+    checkAll
 }

@@ -151,7 +151,7 @@ app.get('/access', async function(req, res) {
 app.get('/invoices', async function(req, res) {
     authorizedOperation(req, res, '/invoices', function(xeroClient) {
         xeroClient.invoices.get(
-            { Statuses: 'AUTHORISED,VOIDED' }
+            { Statuses: 'AUTHORISED' }
         )
             .then(function(result) {
                 const formattedData = func.removePayments(result.Invoices)
@@ -173,49 +173,19 @@ app.get('/invoices', async function(req, res) {
     })
 });
 
-app.use('/createinvoice', async function(req, res) {
-    if (req.method == 'GET') {
-        return res.render('createinvoice');
-    } else if (req.method == 'POST') {
-        try {
-            authorizedOperation(req, res, '/createinvoice', async function(xeroClient) {
-                var invoice = await xeroClient.invoices.create({
-                    Type: req.body.Type,
-                    Contact: {
-                        Name: req.body.Contact
-                    },
-                    DueDate: '2014-10-01',
-                    LineItems: [{
-                        Description: req.body.Description,
-                        Quantity: req.body.Quantity,
-                        UnitAmount: req.body.Amount,
-                        AccountCode: 400,
-                        ItemCode: 'ABC123'
-                    }],
-                    Status: 'DRAFT'
-                });
-
-                res.render('createinvoice', { outcome: 'Invoice created', id: invoice.InvoiceID })
-
-            })
-        }
-        catch (err) {
-            res.render('createinvoice', { outcome: 'Error', err: err })
-
-        }
-    }
-});
-
 app.post('/void', async function(req, res) {
     console.log(req.body)
     authorizedOperation(req, res, '/void', function(xeroClient) {
         for (let i = 1; i < 3; i ++){
-            xeroClient.invoices.update(
-                {
-                    InvoiceNumber: `INV-000${i}`,
-                    Status: 'VOIDED'
-                })
-                console.log('done');
+            // this  block  of  code  works  fine
+            // xeroClient.invoices.update(
+            //     {
+            //         InvoiceNumber: `INV-000${i}`,
+            //         Status: 'VOIDED'
+            //     })
+            //     console.log('done');
+
+            //just need to get all invoice numbers into an array and then iterate through them all using [i]
                 
         }
        

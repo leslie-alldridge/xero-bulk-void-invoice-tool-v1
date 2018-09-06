@@ -1,35 +1,42 @@
-# Xero Bulk Void Invoice Tool
+# Xero Node - Sample Application
 
-### The vision
-Bulk voiding invoices isn't currently available in Xero. I never like hearing things aren't possible and dreamed of how I'd implement a solution. This has been a feature request for multiple years and new invoicing hasn't reached cruising speed yet. I'm hoping this app is going to help some users in the meantime.
+To help users get up and running with the xero-node SDK quickly, we've included a sample app that is written using the Express library.
 
-### Sounds good, how do I use it?
+https://xero-sample-app.herokuapp.com
 
-1. Navigate to "URL goes here"
-2. Authenticate to Xero, and on the homepage browse all authenticated invoices
-3. Select invoices you wish to void then click the 'Void All' button
-4. They're now voided! Wahoo!
+### Clone the Repo
 
-## Goals 
-
-### MVP 
-- Create an easy to use app where all authorised invoices, without payments, display in a table (partly paid/paid invoices cannot be voided)
-- As a user I want to easily find and select invoices I wish to void (a select all function to save clicks)
-- When clicking void, I expect all selected invoices to be voided and some kind of prompt to let me know it was successful.
-
-### Stretch goals
-1. Table filtering 
-2. CSS styling
-3. Saving user sessions
-4. Implementing paging to reduce API calls
-
-### Extra Stretch
-Moving to React for a smoother experience
-
-### Running the Tool
+To get this sample app up and running follow these steps;
 
 ```
-yarn install
-yarn start
+git clone https://github.com/XeroAPI/xero-node-sample-app
+cd xero-node-sample-app
+yarn
 ```
+
+### Modify the sample config file
+
+You'll then need to modify the config file available at `xero-node-sample-app/config/example_config.json`.
+
+```javascript
+{
+    "appType": "partner",
+    "consumerKey": "aaa",
+    "consumerSecret": "bbb",
+    "privateKeyPath": "C:\\keys\\privatekey.pem",
+    "callbackUrl": "http://localhost:3100/access"
+}
+```
+
+* The `appType` determines whether you would like to run the sample app using your public or partner credentials.
+* The consumerKey/Secret should be provided depending on your app type
+
+Save this file as: `xero-node-sample-app/config/config.json`.
+
+### Running the Sample App
+
+```
+node xero-node-sample-app/index.js
+```
+
 You should now see the prompt `listening on http://localhost:3100`.  Browse there and enjoy.

@@ -3,6 +3,7 @@
 <table class="table table-bordered table-collapsed table-hover">
     <thead>
         <tr>
+            <th><input type="checkbox" onclick="checkAll(this)"></th>
             <th>Invoice Number</th>
             <th>Date</th>
             <th>Due Date</th>
@@ -14,6 +15,7 @@
     {{#each invoices}}
     <tr class="accordion-toggle" data-toggle="collapse" data-target="#{{this.InvoiceID}}">
         {{#ifCond this.Type '==' 'ACCREC'}}
+        <td><input class="checkbox" type="checkbox" name="{{this.InvoiceNumber}}" value={{this.InvoiceNumber}}></td>
         <td><a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceID={{ this.InvoiceID }}" target="_blank">
             {{#if this.InvoiceNumber}}
                 {{this.InvoiceNumber}}
