@@ -31,6 +31,5 @@ Moving to React for a smoother experience
 ```
 yarn install
 yarn start
-
 ```
 You should now see the prompt `listening on http://localhost:3100`.  Browse there and enjoy.
