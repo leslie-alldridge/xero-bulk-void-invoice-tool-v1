@@ -176,6 +176,7 @@ app.get('/invoices', async function(req, res) {
 app.post('/void', async function(req, res) {
     console.log(req.body)
     authorizedOperation(req, res, '/void', function(xeroClient) {
+        
         for (let i = 1; i < 3; i ++){
             // this  block  of  code  works  fine
             // xeroClient.invoices.update(

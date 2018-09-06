@@ -25,14 +25,23 @@ function removePayments (apiInfo) {
 }
 
 function checkAll (bx) {
+    var invTotal = document.getElementById('invoiceNums')
+
     var cbs = document.getElementsByClassName('checkbox');
+    let arr = []
+
   for(var i=0; i < cbs.length; i++) {
-    // if(cbs[i].type == 'checkbox') {
       cbs[i].checked = bx.checked;
+        if(cbs[i].checked == false){
+            console.log(cbs[i]);
+        } else {
+            arr.push(cbs[i].name)
+        }
+    }
     
-  }
-  console.log(cbs);
-  
+    invTotal.value = arr;
+    console.log(arr);
+    return arr
 }
 
 module.exports = {
