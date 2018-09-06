@@ -67,7 +67,7 @@ app.use(express.bodyParser());
 app.set('trust proxy', 1);
 app.use(session({
     secret: 'something crazy',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     cookie: { secure: false }
 }));
@@ -151,7 +151,7 @@ app.get('/access', async function(req, res) {
 app.get('/invoices', async function(req, res) {
     authorizedOperation(req, res, '/invoices', function(xeroClient) {
         xeroClient.invoices.get(
-            { Statuses: 'AUTHORISED' }
+            { Statuses: 'AUTHORISED,VOIDED' }
         )
             .then(function(result) {
                 const formattedData = func.removePayments(result.Invoices)
@@ -209,21 +209,28 @@ app.use('/createinvoice', async function(req, res) {
 app.post('/void', async function(req, res) {
     console.log(req.body)
     authorizedOperation(req, res, '/void', function(xeroClient) {
-        xeroClient.invoices.update(
-            {
-                "InvoiceNumber": "INV-123",
-                "Status": "VOIDED"
-            }
-        )
+        for (let i = 1; i < 3; i ++){
+            xeroClient.invoices.update(
+                {
+                    InvoiceNumber: `INV-000${i}`,
+                    Status: 'VOIDED'
+                })
+                console.log('done');
+                
+        }
+       
+
+            res.render('invoices', { outcome: 'Invoice voided'})
+        
 
 
 })
 })
 
-app.use(function(req, res, next) {
-    if (req.session)
-        delete req.session.returnto;
-})
+// app.use(function(req, res, next) {
+//     if (req.session)
+//         delete req.session.returnto;
+// })
 
 var PORT = process.env.PORT || 3100;
 
