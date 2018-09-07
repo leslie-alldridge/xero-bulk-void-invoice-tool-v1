@@ -4,4 +4,13 @@
   </div>
 {{/if}}
 <h2>Bulk Void Application V1</h2>
-<p>Home Page</p>
+<p>Please use the navigation bar to the left to get started.</p>
+<p>More information about this app is located over on <a href="https://github.com/leslie-alldridge/xero-bulk-void-invoice-tool-v1">GitHub</a></p>
+
+{{#if sessionFlash.type}}
+  <div id="flash-messages" class="container">
+      <div class="alert alert-{{sessionFlash.type}}">
+              {{{sessionFlash.message}}}
+      </div>
+  </div>
+  {{/if }}

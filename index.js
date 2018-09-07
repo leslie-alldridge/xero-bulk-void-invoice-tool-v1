@@ -5,6 +5,7 @@ const session = require('express-session');
 const XeroClient = require('xero-node').AccountingAPIClient;;
 const exphbs = require('express-handlebars');
 const func = require('./assets/js/func')
+let flash = require('connect-flash');
 
 let app = express();
 
@@ -73,7 +74,15 @@ app.use(session({
         secure: false
     }
 }));
-
+//
+app.use(function(req, res, next){
+    // if there's a flash message in the session request, make it available 
+    //in the response, then delete it
+      res.locals.sessionFlash = req.session.sessionFlash;
+      delete req.session.sessionFlash;
+      next();
+    });
+//
 app.use(express.static(__dirname + '/assets'));
 
 function getXeroClient(session) {
@@ -171,16 +180,25 @@ app.get('/invoices', async function(req, res) {
 app.post('/void', async function(req, res) {
     let invoices = req.body.Invoices.split(',');
     authorizedOperation(req, res, '/void', function(xeroClient) {
-
-        for (let i = 0; i < invoices.length; i++) {
-            xeroClient.invoices.update({
-                InvoiceNumber: invoices[i],
-                Status: 'VOIDED'
-            })
+        try {
+            for (let i = 0; i < invoices.length; i++) {
+                xeroClient.invoices.update({
+                    InvoiceNumber: invoices[i],
+                    Status: 'VOIDED'
+                })
+            }
+            req.session.sessionFlash = {
+                type: 'success',
+                message: 'Invoices voided successfully. Please check your Xero Organisation to confirm.'
+            }
+            res.redirect('/')
+        } catch (ex) {
+            req.session.sessionFlash = {
+                type: 'danger',
+                message: 'An error occured. Please wait before trying again or select less than 60 invoices in a batch.'
+            }
+            res.redirect('/invoices')
         }
-        res.render('invoices', {
-            outcome: 'Invoices voided'
-        })
     })
 })
 

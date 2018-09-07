@@ -1,5 +1,13 @@
 <h3>Approved Invoices</h3>
 <p><i><b>Note:</b> Only unpaid invoices will display below. Dates are in YYYY-MM-DD format.</i></p>
+    {{#if sessionFlash.type}}
+  <div id="flash-messages" class="container">
+      <div class="alert alert-{{sessionFlash.type}}">
+              {{{sessionFlash.message}}}
+      </div>
+  </div>
+  {{/if }}
+
 <table class="table table-bordered table-collapsed table-hover">
     <thead>
         <tr>
