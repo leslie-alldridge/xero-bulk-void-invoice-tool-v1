@@ -175,27 +175,36 @@ app.get('/invoices', async function(req, res) {
 
 app.post('/void', async function(req, res) {
     console.log(req.body)
+    let invoices = req.body.Invoices.split(',');
+    console.log(invoices);
+    
+
     authorizedOperation(req, res, '/void', function(xeroClient) {
         
-        for (let i = 1; i < 3; i ++){
+        for (let i = 0; i < invoices.length; i ++){
             // this  block  of  code  works  fine
-            // xeroClient.invoices.update(
-            //     {
-            //         InvoiceNumber: `INV-000${i}`,
-            //         Status: 'VOIDED'
-            //     })
-            //     console.log('done');
-
+            xeroClient.invoices.update(
+                {
+                    InvoiceNumber: invoices[i],
+                    Status: 'VOIDED'
+                })
+                console.log('done');
+                console.log(invoices[i]);
+                
             //just need to get all invoice numbers into an array and then iterate through them all using [i]
                 
         }
        
 
-            res.render('invoices', { outcome: 'Invoice voided'})
+            res.render('invoices', { outcome: 'Invoices voided'})
         
 
 
 })
+})
+
+app.get('/help', async function(req, res) {
+    return res.render('help', {help: true});
 })
 
 // app.use(function(req, res, next) {
