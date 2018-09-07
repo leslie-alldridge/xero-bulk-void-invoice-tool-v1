@@ -6,9 +6,9 @@ const XeroClient = require('xero-node').AccountingAPIClient;;
 const exphbs = require('express-handlebars');
 const func = require('./assets/js/func')
 
-var app = express();
+let app = express();
 
-var exbhbsEngine = exphbs.create({
+let exbhbsEngine = exphbs.create({
     defaultLayout: 'main',
     layoutsDir: __dirname + '/views/layouts',
     partialsDir: [
@@ -69,7 +69,9 @@ app.use(session({
     secret: 'something crazy',
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: {
+        secure: false
+    }
 }));
 
 app.use(express.static(__dirname + '/assets'));
@@ -80,7 +82,6 @@ function getXeroClient(session) {
         config = require('./config/config.json');
     } catch (ex) {
         if (process && process.env && process.env.APPTYPE) {
-            //no config file found, so check the process.env.
             config.appType = process.env.APPTYPE.toLowerCase();
             config.callbackUrl = process.env.authorizeCallbackUrl;
             config.consumerKey = process.env.consumerKey;
@@ -89,15 +90,13 @@ function getXeroClient(session) {
             throw "Config not found";
         }
     }
-
     return new XeroClient(config, session);
 }
 
 async function authorizeRedirect(req, res, returnTo) {
-    var xeroClient = getXeroClient(req.session);
+    let xeroClient = getXeroClient(req.session);
     let requestToken = await xeroClient.oauth1Client.getRequestToken();
-
-    var authoriseUrl = xeroClient.oauth1Client.buildAuthoriseUrl(requestToken);
+    let authoriseUrl = xeroClient.oauth1Client.buildAuthoriseUrl(requestToken);
     req.session.oauthRequestToken = requestToken;
     req.session.returnTo = returnTo;
     res.redirect(authoriseUrl);
@@ -112,7 +111,6 @@ function authorizedOperation(req, res, returnTo, callback) {
 }
 
 function handleErr(err, req, res, returnTo) {
-    console.log(err);
     if (err.data && err.data.oauth_problem && err.data.oauth_problem == "token_rejected") {
         authorizeRedirect(req, res, returnTo);
     } else {
@@ -121,8 +119,9 @@ function handleErr(err, req, res, returnTo) {
 }
 
 app.get('/error', function(req, res) {
-    console.log(req.query.error);
-    res.render('index', { error: req.query.error });
+    res.render('index', {
+        error: req.query.error
+    });
 })
 
 // Home Page
@@ -136,83 +135,62 @@ app.get('/', function(req, res) {
 
 // Redirected from xero with oauth results
 app.get('/access', async function(req, res) {
-    var xeroClient = getXeroClient();
-
+    let xeroClient = getXeroClient();
     let savedRequestToken = req.session.oauthRequestToken;
     let oauth_verifier = req.query.oauth_verifier;
     let accessToken = await xeroClient.oauth1Client.swapRequestTokenforAccessToken(savedRequestToken, oauth_verifier);
-
     req.session.accessToken = accessToken;
-
-    var returnTo = req.session.returnTo;
+    let returnTo = req.session.returnTo;
     res.redirect(returnTo || '/');
 });
 
 app.get('/invoices', async function(req, res) {
     authorizedOperation(req, res, '/invoices', function(xeroClient) {
-        xeroClient.invoices.get(
-            { Statuses: 'AUTHORISED' }
-        )
+        xeroClient.invoices.get({
+                Statuses: 'AUTHORISED'
+            })
             .then(function(result) {
                 const formattedData = func.removePayments(result.Invoices)
-                    res.render('invoices', {
-                        invoices: formattedData,
-                        active: {
-                            invoices: true,
-                            nav: {
-                                accounting: true
-                            }
+                res.render('invoices', {
+                    invoices: formattedData,
+                    active: {
+                        invoices: true,
+                        nav: {
+                            accounting: true
                         }
-                    });
-                
+                    }
+                });
+
             })
             .catch(function(err) {
                 handleErr(err, req, res, 'invoices');
             })
-
     })
 });
 
 app.post('/void', async function(req, res) {
-    console.log(req.body)
     let invoices = req.body.Invoices.split(',');
-    console.log(invoices);
-    
-
     authorizedOperation(req, res, '/void', function(xeroClient) {
-        
-        for (let i = 0; i < invoices.length; i ++){
-            // this  block  of  code  works  fine
-            xeroClient.invoices.update(
-                {
-                    InvoiceNumber: invoices[i],
-                    Status: 'VOIDED'
-                })
-                console.log('done');
-                console.log(invoices[i]);
-                
-            //just need to get all invoice numbers into an array and then iterate through them all using [i]
-                
+
+        for (let i = 0; i < invoices.length; i++) {
+            xeroClient.invoices.update({
+                InvoiceNumber: invoices[i],
+                Status: 'VOIDED'
+            })
         }
-       
-
-            res.render('invoices', { outcome: 'Invoices voided'})
-        
-
-
-})
+        res.render('invoices', {
+            outcome: 'Invoices voided'
+        })
+    })
 })
 
 app.get('/help', async function(req, res) {
-    return res.render('help', {help: true});
+    return res.render('help', {
+        help: true
+    });
 })
 
-// app.use(function(req, res, next) {
-//     if (req.session)
-//         delete req.session.returnto;
-// })
-
-var PORT = process.env.PORT || 3100;
+let PORT = process.env.PORT || 3100;
 
 app.listen(PORT);
 console.log("listening on http://localhost:" + PORT);

@@ -12,64 +12,63 @@
         </tr>
     </thead>
     <tbody>
-    {{#each invoices}}
-    <tr class="accordion-toggle" data-toggle="collapse" data-target="#{{this.InvoiceID}}">
-        {{#ifCond this.Type '==' 'ACCREC'}}
-        <td><input class="checkbox" type="checkbox" name="{{this.InvoiceNumber}}" value={{this.InvoiceNumber}}></td>
-        <td><a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceID={{ this.InvoiceID }}" target="_blank">
-            {{#if this.InvoiceNumber}}
-                {{this.InvoiceNumber}}
-            {{else}}
-                {{this.InvoiceID}}
-            {{/if}}
-            </a>
-        </td>
+        {{#each invoices}}
+            <tr class="accordion-toggle" data-toggle="collapse" data-target="#{{this.InvoiceID}}">
+                {{#ifCond this.Type '==' 'ACCREC'}}
+                    <td><input id="box" class="checkbox" type="checkbox" name="{{this.InvoiceNumber}}" value={{this.InvoiceNumber}}></td>
+                    <td><a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceID={{ this.InvoiceID }}" target="_blank">
+                            {{#if this.InvoiceNumber}}
+                                {{this.InvoiceNumber}}
+                            {{else}}
+                                {{this.InvoiceID}}
+                            {{/if}}
+                        </a>
+                    </td>
         {{else}}
-        <td><a href="https://go.xero.com/AccountsPayable/View.aspx?InvoiceID={{ this.InvoiceID }}" target="_blank">
-            {{#if this.InvoiceNumber}}
-                {{this.InvoiceNumber}}
-            {{else}}
-                {{this.InvoiceID}}
-            {{/if}}
-            </a>
-        </td>
-        {{/ifCond}}
-        <td>{{ this.DateString }}</td>
-        <td>{{ this.DueDateString }}</td>
-        <td>{{ this.Status}}</td>
-        <td>{{ this.Total }}</td>
-    </tr>
-    
-    {{#ifCond this.Payments.length '>' 0}}
-    <tr>
-        <td class="accordion-body collapse" id="{{this.InvoiceID}}">
-            <h5>Invoice Payments</h5>
-            <table class="table table-condensed">
-                <thead>
+            <td><a href="https://go.xero.com/AccountsPayable/View.aspx?InvoiceID={{ this.InvoiceID }}" target="_blank">
+                    {{#if this.InvoiceNumber}}
+                        {{this.InvoiceNumber}}
+                    {{else}}
+                        {{this.InvoiceID}}
+                    {{/if}}
+                </a>
+            </td>
+                {{/ifCond}}
+                <td>{{ this.DateString }}</td>
+                <td>{{ this.DueDateString }}</td>
+                <td>{{ this.Status}}</td>
+                <td>{{ this.Total }}</td>
+            </tr>
+
+            {{#ifCond this.Payments.length '>' 0}}
+                <tr>
+                    <td class="accordion-body collapse" id="{{this.InvoiceID}}">
+                        <h5>Invoice Payments</h5>
+                        <table class="table table-condensed">
+                            <thead>
                     <th>Date</th>
                     <th>Amount</th>
                     <th>Reference</th>
-                </thead>
-                <tbody>
-                    {{#each this.Payments as |payment|}}
-                        {{#if payment.Amount}}
-                            <tr>
-                                <td>{{payment.Date}}</td>
-                                <td>{{payment.Amount}}</td>
-                                <td>{{payment.Reference}}</td>
-                            </tr>
-                        {{/if}}
-                    {{/each}}
-                </tbody>
-            </table>
-        </td>
-    </tr>
-    {{/ifCond}}
-    {{/each}}
+                    </thead>
+    <tbody>
+        {{#each this.Payments as |payment|}}
+            {{#if payment.Amount}}
+                <tr>
+                    <td>{{payment.Date}}</td>
+                    <td>{{payment.Amount}}</td>
+                    <td>{{payment.Reference}}</td>
+                </tr>
+            {{/if}}
+        {{/each}}
     </tbody>
-    <form id="voidForm" action='/void' method="POST">
+</table>
+</td>
+</tr>
+{{/ifCond}}
+{{/each}}
+</tbody>
+<form id="voidForm" action='/void' method="POST">
     <input id="invoiceNums" type="text" name="Invoices" value="">
-  <input id="voidBtn" onclick="checkSingle()"type="submit" name="VOID" value="VOID" />
-
+    <input id="voidBtn" onclick="checkSingle()" type="submit" name="VOID" value="VOID" />
 </form>
 </table>

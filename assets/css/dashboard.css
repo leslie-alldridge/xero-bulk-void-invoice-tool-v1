@@ -125,7 +125,7 @@ body {
 }
 
 /*
- *  /Invoices Page
+ *  /Invoices Page and Nav
  */
 #invoiceNums {
     display: none;
@@ -164,4 +164,13 @@ body {
     font-size: 1.5em;
     padding-left: 0px;
     color:white;
+}
+
+#bodyCon {
+    margin-top: 18px; 
+    max-width: 65%;
+}
+
+#navvy {
+    max-width: 15%;
 }
