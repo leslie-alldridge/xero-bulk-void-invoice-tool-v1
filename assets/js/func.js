@@ -6,14 +6,24 @@ removePayments = (apiInfo) => {
     }
     const result = data.invoices.filter(invoice =>
         invoice.Payments.length < 1)
+        removeDates(result)
     return result
+}
+
+removeDates = (result) => {
+    for (let i = 0; i < result.length; i++) {
+        result.forEach(invoice => {
+            invoice.DueDateString = invoice.DueDateString.substring(0, 10)
+            invoice.DateString = invoice.DateString.substring(0, 10)
+            return result
+        })
+    } 
 }
 
 checkAll = (bx) => {
     let invTotal = document.getElementById('invoiceNums');
     let cbs = document.getElementsByClassName('checkbox');
     let arr = []
-
     for (let i = 0; i < cbs.length; i++) {
         cbs[i].checked = bx.checked;
         if (cbs[i].checked == false) {} else {
