@@ -13,15 +13,16 @@ Bulk voiding invoices isn't currently available in Xero. I never like hearing th
 ## Goals 
 
 ### MVP 
-- Create an easy to use app where all authorised invoices, without payments, display in a table (partly paid/paid invoices cannot be voided)
-- As a user I want to easily find and select invoices I wish to void (a select all function to save clicks)
+- Create an easy to use app where all authorised invoices, without payments, display in a table (partly paid/paid invoices cannot be voided) - Done
+- As a user I want to easily find and select invoices I wish to void (a select all function to save clicks) - Done
 - When clicking void, I expect all selected invoices to be voided and some kind of prompt to let me know it was successful.
 
 ### Stretch goals
 1. Table filtering 
-2. CSS styling
+2. CSS styling - Done
 3. Saving user sessions
 4. Implementing paging to reduce API calls
+5. Format dates to exclude time
 
 ### Extra Stretch
 Moving to React for a smoother experience
