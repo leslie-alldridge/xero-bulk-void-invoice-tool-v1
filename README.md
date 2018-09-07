@@ -22,7 +22,7 @@ Bulk voiding invoices isn't currently available in Xero. I never like hearing th
 2. CSS styling - Done
 3. Saving user sessions
 4. Implementing paging to reduce API calls
-5. Format dates to exclude time
+5. Format dates to exclude time - Done
 
 ### Extra Stretch
 Moving to React for a smoother experience
